@@ -1,0 +1,218 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saks Proxy</title>
+
+  <link rel="stylesheet" href="/assets/css/index.css" />
+  <link rel="shortcut icon" href="favicons.ico" />
+
+  <script src="/scram/scramjet.all.js"></script>
+  <script src="/libcurl/index.js"></script>
+  <script src="/baremux/index.js"></script>
+  <script src="register-sw.js" defer></script>
+  <script src="/assets/js/index.js" defer></script>
+</head>
+
+<body>
+<!-- ONLINE COUNTER -->
+
+<div class="online-counter">
+  🟢 Users online:
+  <span id="online">0</span>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+function getUserId() {
+
+  let id =
+    localStorage.getItem("saks-user-id");
+
+  if (!id) {
+
+    id = crypto.randomUUID();
+
+    localStorage.setItem(
+      "saks-user-id",
+      id
+    );
+
+  }
+
+  return id;
+}
+
+window.addEventListener(
+  "DOMContentLoaded",
+  () => {
+
+    if (typeof io === "undefined") {
+      console.error(
+        "Socket.IO failed to load"
+      );
+
+      return;
+    }
+
+    const socket = io({
+      auth: {
+        userId: getUserId()
+      }
+    });
+
+    socket.on(
+      "connect",
+      () => {
+
+        console.log(
+          "Connected to socket server"
+        );
+
+      }
+    );
+
+    socket.on(
+      "onlineUsers",
+      (count) => {
+
+        const online =
+          document.getElementById(
+            "online"
+          );
+
+        if (online) {
+          online.innerText =
+            count;
+        }
+
+      }
+    );
+
+  }
+);
+</script>
+<!-- particles background -->
+<div id="particles-js"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+
+<script>
+tsParticles.load("particles-js", {
+  fullScreen: {
+    enable: false
+  },
+
+  background: {
+    color: {
+      value: "transparent"
+    }
+  },
+
+  fpsLimit: 60,
+
+  particles: {
+    number: {
+      value: 80
+    },
+
+    color: {
+      value: "#ffffff"
+    },
+
+    links: {
+      enable: true,
+      color: "#ffffff",
+      distance: 150,
+      opacity: 0.15,
+      width: 1
+    },
+
+    move: {
+      enable: true,
+      speed: 1
+    },
+
+    opacity: {
+      value: 0.4
+    },
+
+    size: {
+      value: {
+        min: 1,
+        max: 3
+      }
+    }
+  },
+
+  interactivity: {
+    events: {
+      onHover: {
+        enable: true,
+        mode: "grab"
+      }
+    },
+
+    modes: {
+      grab: {
+        distance: 140,
+        links: {
+          opacity: 0.4
+        }
+      }
+    }
+  }
+});
+</script>
+  <div id="browser-shell" style="display:none;">
+    <div class="chrome-top">
+      <div id="tabs" class="tabs"></div>
+      <button id="new-tab-btn">+</button>
+    </div>
+
+    <div class="nav-bar">
+      <button id="back-btn">←</button>
+      <button id="forward-btn">→</button>
+      <button id="reload-btn">⟳</button>
+      <input id="browser-url" type="text" placeholder="Search or enter a URL" />
+      <input
+  id="sj-search-engine"
+  value="https://duckduckgo.com/?q=%s"
+  type="hidden"
+/>
+    </div>
+
+    <div id="frame-area"></div>
+  </div>
+
+<div id="home-view" class="flex-center">
+  <div class="home-view">
+    <div class="logo-wrapper">
+      <img class="logo" src="/assets/images/sj.png" alt="logo" />
+      <h1>Saks Proxy</h1>
+    </div>
+
+      <div class="quote">
+        <p id="msg">test</p>
+      </div>
+
+      <form id="sj-form">
+        <input id="sj-address" type="text" placeholder="Search the web freely" />
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <div>
+      <a href="https://github.com/MercuryWorkshop">Mercury Workshop</a>
+      <a href="https://github.com/MercuryWorkshop/Scramjet-Demo">GitHub</a>
+      <a href="settings.html">Settings</a>
+    </div>
+    <div>
+      <span>Saks Proxy V0.0.5 (NEW ICONS someone pls hire for art😭😭😭)</span>
+    </div>
+  </footer>
+</body>
+</html>
